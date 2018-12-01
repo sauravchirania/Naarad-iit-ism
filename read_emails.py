@@ -1,29 +1,57 @@
 import imaplib
 import email
+import email_class
+import os
 
 ORGANISATION = "@cse.ism.ac.in"
 EMAIL = "saurav.16je002321" + ORGANISATION
 PASSWORD = "XXXXXXXXXXXX"
-SMTP_SERVER = "imap.gmail.com"
-SMTP_PORT = 993
+IMAP_SERVER = "imap.gmail.com"
+ATTACHMENT_DIR = "/home/saurav/devstack/Naarad-iit-ism/attachments"
+
+def get_body(msg):
+    if msg.is_multipart():
+        return get_body(msg.get_payload(0))
+    else:
+        return msg.get_payload(None,True)
+
+def get_attachments(msg, mailobj):
+    for part in msg.walk():
+        if part.get_content_maintype()=='multipart':
+            continue
+        if part.get('Content-Disposition') is None:
+            continue
+        fileName = part.get_filename()
+
+        if bool(fileName):
+            filePath = os.path.join(ATTACHMENT_DIR, fileName)
+            with open(filePath,'wb') as f:
+                f.write(part.get_payload(decode=True))
+            attachment_obj = email_class.attachment(fileName, filePath)
+            mailobj.attachment_list.append(attachment_obj)
+
 
 def readmail():
-    mail = imaplib.IMAP4_SSL(SMTP_SERVER)
-    mail.login(EMAIL, PASSWORD)
-    mail.select('inbox')
-    typ , data = mail.search(None, '(FROM "Director")')
-    mail_ids = data[0]
-    id_list = mail_ids.split()
-    for i in id_list:
-        print (i)
-    for i in id_list:
-        t, d = mail.fetch(i, '(RFC822)' )
-        for response_part in d:
+    connection = imaplib.IMAP4_SSL(IMAP_SERVER)
+    connection.login(EMAIL, PASSWORD)
+    connection.select('inbox')
+    return_code , data = connection.search(None, '(FROM "Director" UNSEEN)')
+    mail_ids_string = data[0]
+    mail_ids = mail_ids_string.split()
+    for mail_id in mail_ids:
+        typ, response = connection.fetch(mail_id, '(RFC822)' )
+        for response_part in response:
             if isinstance(response_part, tuple):
-                msg = email.message_from_string(response_part[1].decode("utf-8"))
+                msg = email.message_from_bytes(response_part[1])
                 email_subject = msg['subject']
                 email_from = msg['from']
-                print ('From : ' + email_from + '\n')
-                print ('Subject : ' + email_subject + '\n')
+                email_body = get_body(msg).decode('utf-8')
+                mailobj = email_class.email(email_from,email_subject,email_body)
+                get_attachments(msg, mailobj)
+                print(mailobj.sender)
+                print(mailobj.subject)
+                print(mailobj.body)
+                print("---------------------")
+
 
 readmail()

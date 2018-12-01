@@ -8,9 +8,8 @@ class attachment:
 class email:
 
     #if any of the attribte is not present , pass None.
-    def __init__(self,name, email_addr, subject, body, attachment_list):
-        self.name = name;
-        self.email_addr = email_addr
+    def __init__(self, sender, subject, body):
+        self.sender = sender;
         self.subject = subject
         self.body = body
-        self.attachment_list = attachment_list
+        self.attachment_list = []
