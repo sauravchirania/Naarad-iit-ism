@@ -3,11 +3,11 @@ import email
 import email_class
 import os
 
-ORGANISATION = "@cse.ism.ac.in"
-EMAIL = "saurav.16je002321" + ORGANISATION
-PASSWORD = "XXXXXXXXXXXX"
+ORGANISATION = "@gmail.com"
+EMAIL = "xxxxxxxx" + ORGANISATION
+PASSWORD = "xxxxxxxx"
 IMAP_SERVER = "imap.gmail.com"
-ATTACHMENT_DIR = "/home/saurav/devstack/Naarad-iit-ism/attachments"
+ATTACHMENT_DIR = "/home/anupam/naarad_project/Naarad-iit-ism/attachment"
 
 def get_body(msg):
     if msg.is_multipart():
@@ -32,10 +32,11 @@ def get_attachments(msg, mailobj):
 
 
 def readmail():
+    mail_list = []
     connection = imaplib.IMAP4_SSL(IMAP_SERVER)
     connection.login(EMAIL, PASSWORD)
     connection.select('inbox')
-    return_code , data = connection.search(None, '(FROM "Director" UNSEEN)')
+    return_code , data = connection.search(None, '(FROM "Anupam" UNSEEN)')
     mail_ids_string = data[0]
     mail_ids = mail_ids_string.split()
     for mail_id in mail_ids:
@@ -52,6 +53,5 @@ def readmail():
                 print(mailobj.subject)
                 print(mailobj.body)
                 print("---------------------")
-
-
-readmail()
+                mail_list.append(mailobj)
+    return mail_list
