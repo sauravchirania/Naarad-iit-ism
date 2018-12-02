@@ -3,7 +3,6 @@ import urllib.parse
 import json
 import email_class
 import read_emails
-import img_uploader
 import attachtype
 #import ex
 
