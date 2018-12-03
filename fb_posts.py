@@ -9,6 +9,9 @@ PAGE_ACCESS_TOKEN = 'xxxxxxxxxxxx'
 HOST_URL = 'https://graph.facebook.com/v3.2'
 PAGE_ID = '445446012132531'
 
+def set_access_token(access_token):
+    PAGE_ACCESS_TOKEN = access_token
+
 def construct_msg(mail):
     msg = 'Naarayan, Naarayan!\n\n'
     msg += mail.sender + ' has mailed\n'
@@ -18,6 +21,7 @@ def construct_msg(mail):
     count = 0
     for attachment in mail.attachment_list:
         type = attachtype.attachmentType(attachment.name)
+        print(attachment.name)
         if type == 2:
             count += 1
             if count == 1:
@@ -72,5 +76,3 @@ def fetch_and_post():
         resp = post_feed(msg,attached_media_data_dict)
         print(resp)
         print('--------------------------')
-
-fetch_and_post()
