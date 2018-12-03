@@ -1,13 +1,13 @@
-'''class for email objects which will be used for posting'''
+"""Class for email objects which will be used for posting emails"""
 
-class attachment:
-    def __init__(self,name,url):
+class Attachment:
+    def __init__(self, name, url):
         self.name = name
         self.url = url
 
-class email:
+class Email:
 
-    #if any of the attribte is not present , pass None.
+    #If any of the attributes isn't present, pass None.
     def __init__(self, sender, subject, body):
         self.sender = sender;
         self.subject = subject
