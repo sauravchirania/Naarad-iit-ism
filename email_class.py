@@ -13,3 +13,4 @@ class Email:
         self.subject = subject
         self.body = body
         self.attachment_list = []
+        

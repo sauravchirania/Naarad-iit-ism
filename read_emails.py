@@ -20,7 +20,7 @@ def get_body(msg):
 def get_attachments(msg, mail_obj):
     uploader= db.Uploader()
     for part in msg.walk():
-        if part.get_content_maintype()=='multipart':
+        if part.get_content_maintype() == 'multipart':
             continue
         if part.get('Content-Disposition') is None:
             continue
@@ -30,7 +30,7 @@ def get_attachments(msg, mail_obj):
             file_path = os.path.join(ATTACHMENT_DIR, file_name)
             with open(file_path,'wb') as f:
                 f.write(part.get_payload(decode=True))
-            if (len(mail_obj.attachment_list)==0):
+            if (len(mail_obj.attachment_list) == 0):
                 uploader.connect_to_server(DROPBOX_ACCESS_TOKEN)
             link = uploader.upload_file(file_name, file_path)
             attachment_obj = email_class.Attachment(file_name, link)
