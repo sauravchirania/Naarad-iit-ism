@@ -10,7 +10,7 @@ HOST_URL = 'https://graph.facebook.com/v3.2'
 PAGE_ID = '445446012132531'
 
 def set_access_token(access_token):
-    PAGE_ACCESS_TOKEN = access_token
+    global PAGE_ACCESS_TOKEN = access_token
 
 def construct_msg(mail):
     msg = 'Naarayan, Naarayan!\n\n'
