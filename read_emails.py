@@ -47,10 +47,22 @@ def get_attachments(msg, mail_obj):
             mail_obj.attachment_list.append(attachment_obj)
 
 def read_mail():
-    connection = imaplib.IMAP4_SSL(IMAP_SERVER)
-    connection.login(EMAIL, PASSWORD)
+    tries = 0
+    connection = None
+    while tries<5:
+        try:
+            connection = imaplib.IMAP4_SSL(IMAP_SERVER)
+            connection.login(EMAIL, PASSWORD)
+        except KeyboardInterrupt:
+            raise
+        except:
+            tries += 1
+    if tries==5:
+        print("Unable to connect / login right now!")
+        exit()
     connection.select('inbox')
-    return_code , data = connection.search(None, '(UNSEEN OR FROM "Saurav" FROM "Anupam")')
+    return_code , data = connection.search(None, '(UNSEEN OR (OR (OR (OR (OR TO "student@iitism.ac.in" CC "student@iitism.ac.in") \
+        BCC "student@iitism.ac.in") TO "ug@iitism.ac.in") CC "ug@iitism.ac.in") BCC "ug@iitism.ac.in")')
     mail_ids_string = data[0]
     mail_ids = mail_ids_string.split()
     mail_obj_list = []

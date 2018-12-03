@@ -1,4 +1,5 @@
 import os
+import time
 
 import fb_posts
 import read_emails
@@ -10,4 +11,6 @@ fb_posts.set_access_token(input('Set fb page access token: '))
 read_emails.set_access_token(input('Set dropbox access token: '))
 read_emails.set_email_credentials(input('Email: '),input('Password: '))
 
-fb_posts.fetch_and_post()
+while True:
+    fb_posts.fetch_and_post()
+    time.sleep(900)
