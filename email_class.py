@@ -7,10 +7,9 @@ class Attachment:
 
 class Email:
 
-    #If any of the attributes isn't present, pass None.
+    #if any of the attributes isn't present, pass None.
     def __init__(self, sender, subject, body):
         self.sender = sender;
         self.subject = subject
         self.body = body
         self.attachment_list = []
-        

@@ -9,7 +9,8 @@ class Uploader:
         with open(file_address, 'rb') as fp:
             f = fp.read()
             print('Opened file: ', file_name)
-            uploaded_file_metadata = self.dbx.files_upload(f, '/' + file_name, autorename=True)
+            uploaded_file_metadata
+                = self.dbx.files_upload(f, '/' + file_name, autorename=True)
             print('Uploaded the file ', file_name)
             file_url = uploaded_file_metadata.path_display
             sharing_data = self.dbx.sharing_create_shared_link(file_url)
