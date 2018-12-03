@@ -10,6 +10,7 @@ HOST_URL = 'https://graph.facebook.com/v3.2'
 PAGE_ID = '445446012132531'
 
 def set_access_token(access_token):
+    global PAGE_ACCESS_TOKEN
     PAGE_ACCESS_TOKEN = access_token
 
 def construct_msg(mail):
@@ -58,7 +59,7 @@ def make_attached_media_data_dict(attached_media_list):
     attached_media_data_dict = {}
     for i in range(len(attached_media_list)):
         resp = post_pic(img_url=attached_media_list[i].url, caption=attached_media_list[i].name)
-        attached_media_data_dict['attached_media[' + str(i) + ']']
+        attached_media_data_dict['attached_media[' + str(i) + ']'] \
             = '{"media_fbid":"' + resp['id'] + '"}'
     return attached_media_data_dict
 
@@ -69,7 +70,7 @@ def fetch_and_post():
     for mail in mail_list:
         print('sender  : ' + mail.sender)
         print('subject : ' + mail.subject)
-        print('attachment count :' + len(mail.attachment_list))
+        print('attachment count:', len(mail.attachment_list))
         msg,attached_media_list = construct_msg(mail)
         attached_media_data_dict = make_attached_media_data_dict(attached_media_list)
         print('posting')

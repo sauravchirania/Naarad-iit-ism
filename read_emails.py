@@ -5,15 +5,21 @@ import os
 import email_class
 import db
 
-ORGANISATION = input()
-EMAIL = input() + ORGANISATION
-PASSWORD = input()
+EMAIL = 'xxxxxxxxxxxx'
+PASSWORD = 'xxxxxxxxxxxx'
 IMAP_SERVER = 'imap.gmail.com'
 ATTACHMENT_DIR = 'attachments'
 DROPBOX_ACCESS_TOKEN = 'xxxxxxxxxxxx'
 
 def set_access_token(access_token):
+    global DROPBOX_ACCESS_TOKEN
     DROPBOX_ACCESS_TOKEN = access_token
+
+def set_email_credentials(email, password):
+    global EMAIL
+    global PASSWORD
+    EMAIL = email
+    PASSWORD = password
 
 def get_body(msg):
     if msg.is_multipart():
@@ -44,7 +50,7 @@ def read_mail():
     connection = imaplib.IMAP4_SSL(IMAP_SERVER)
     connection.login(EMAIL, PASSWORD)
     connection.select('inbox')
-    return_code , data = connection.search(None, '(FROM "Saurav" UNSEEN)')
+    return_code , data = connection.search(None, '(UNSEEN OR FROM "Saurav" FROM "Anupam")')
     mail_ids_string = data[0]
     mail_ids = mail_ids_string.split()
     mail_obj_list = []
