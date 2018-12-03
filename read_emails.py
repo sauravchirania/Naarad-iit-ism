@@ -10,7 +10,10 @@ EMAIL = input() + ORGANISATION
 PASSWORD = input()
 IMAP_SERVER = 'imap.gmail.com'
 ATTACHMENT_DIR = 'attachments'
-DROPBOX_ACCESS_TOKEN = input()
+DROPBOX_ACCESS_TOKEN = 'xxxxxxxxxxxx'
+
+def set_access_token(access_token):
+    DROPBOX_ACCESS_TOKEN = access_token
 
 def get_body(msg):
     if msg.is_multipart():
