@@ -1,42 +1,43 @@
-import imaplib
 import email
-import email_class
+import imaplib
 import os
+
+import email_class
 import db
 
 ORGANISATION = input()
 EMAIL = input() + ORGANISATION
 PASSWORD = input()
-IMAP_SERVER = "imap.gmail.com"
-ATTACHMENT_DIR = "attachments"
+IMAP_SERVER = 'imap.gmail.com'
+ATTACHMENT_DIR = 'attachments'
 DROPBOX_ACCESS_TOKEN = input()
 
 def get_body(msg):
     if msg.is_multipart():
         return get_body(msg.get_payload(0))
     else:
-        return msg.get_payload(None,True)
+        return msg.get_payload(None, True)
 
-def get_attachments(msg, mailobj):
-    uploader= db.Uploader()
+def get_attachments(msg, mail_obj):
+    uploader = db.Uploader()
     for part in msg.walk():
-        if part.get_content_maintype()=='multipart':
+        if part.get_content_maintype() == 'multipart':
             continue
         if part.get('Content-Disposition') is None:
             continue
-        fileName = part.get_filename()
+        file_name = part.get_filename()
 
-        if bool(fileName):
-            filePath = os.path.join(ATTACHMENT_DIR, fileName)
-            with open(filePath,'wb') as f:
+        if bool(file_name):
+            file_path = os.path.join(ATTACHMENT_DIR, file_name)
+            with open(file_path,'wb') as f:
                 f.write(part.get_payload(decode=True))
-            if (len(mailobj.attachment_list)==0):
+            if len(mail_obj.attachment_list) == 0:
                 uploader.connect_to_server(DROPBOX_ACCESS_TOKEN)
-            link = uploader.upload_file(fileName, filePath)
-            attachment_obj = email_class.attachment(fileName, link)
-            mailobj.attachment_list.append(attachment_obj)
+            link = uploader.upload_file(file_name, file_path)
+            attachment_obj = email_class.Attachment(file_name, link)
+            mail_obj.attachment_list.append(attachment_obj)
 
-def readmail():
+def read_mail():
     connection = imaplib.IMAP4_SSL(IMAP_SERVER)
     connection.login(EMAIL, PASSWORD)
     connection.select('inbox')
@@ -52,11 +53,11 @@ def readmail():
                 email_subject = msg['subject']
                 email_from = msg['from']
                 email_body = get_body(msg).decode('utf-8')
-                mailobj = email_class.email(email_from,email_subject,email_body)
-                get_attachments(msg, mailobj)
-                print(mailobj.sender)
-                print(mailobj.subject)
-                print(mailobj.body)
-                print("---------------------")
-                mail_obj_list.append(mailobj)
+                mail_obj = email_class.Email(email_from, email_subject, email_body)
+                get_attachments(msg, mail_obj)
+                print(mail_obj.sender)
+                print(mail_obj.subject)
+                print(mail_obj.body)
+                print('---------------------')
+                mail_obj_list.append(mail_obj)
     return mail_obj_list
